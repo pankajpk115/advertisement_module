@@ -1,0 +1,10 @@
+[
+    { "id": 1, "text": "Cybersecurity, Ethical hacking, vulnerability & penetration testing, offensive security, Cyber threat intelligence, malware analysis", "imageUrl": "assets/cyber4.webp" },
+    { "id": 2, "text": "Cloud computing, IoT/IIoT", "imageUrl": "assets/cld1.png" },
+    { "id": 3, "text": "Cloud computing, Virtualisation stack, Dockers, DevOps, DevSecOps", "imageUrl": "assets/devops.jpg" },
+    { "id": 4, "text": "Artificial intelligence/Deep learning/Machine learning, ", "imageUrl": "assets/ai2.jpg" },
+    { "id": 5, "text": "Quantum computing, digital electronics, computer vision, ", "imageUrl": "assets/qntm.jpg" },
+    { "id": 6, "text": "Computer programming- C/C++, Python programming, Jupyter, android app development, etc", "imageUrl": "assets/lang2.webp" },
+    { "id": 7, "text": "Scientific tools and packages- Matlab, R programming, Keras, Tensorflow, Scikitlearn etc, etc", "imageUrl": "assets/NN.png" }
+]
+  
