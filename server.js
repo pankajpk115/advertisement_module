@@ -1,47 +1,90 @@
-const express = require('express');
-const nodemailer = require('nodemailer');
-const bodyParser = require('body-parser');
-const cors = require('cors');
+import { APP_BASE_HREF } from '@angular/common';
+import { CommonEngine } from '@angular/ssr';
+import express from 'express';
+import nodemailer from 'nodemailer';
+import { fileURLToPath } from 'url';
+import { dirname, join, resolve } from 'path';
+import AppServerModule from './src/main.server.js';
 
-const app = express();
-app.use(bodyParser.json());
-app.use(cors());
+// The Express app is exported so that it can be used by serverless Functions.
+export function app() {
+  const server = express();
+  const serverDistFolder = dirname(fileURLToPath(import.meta.url));
+  const browserDistFolder = resolve(serverDistFolder, '../browser');
+  const indexHtml = join(serverDistFolder, 'index.server.html');
 
-app.post('/newsletter', (req, res) => {
-  const { email } = req.body;
+  const commonEngine = new CommonEngine();
 
-  // Create a Nodemailer transporter
-  const transporter = nodemailer.createTransport({
-    port: 465, 
-    secure: true,
-    
-    auth: {
-      user: '2118pankaj.kumar@gmail.com',
-      pass: ')(*&^%$#@!',
-    },
+  // Middleware for JSON and URL-encoded form parsing
+  server.use(express.json());
+  server.use(express.urlencoded({ extended: true }));
+
+  server.set('view engine', 'html');
+  server.set('views', browserDistFolder);
+
+  // Serve static files from /browser
+  server.get('*.*', express.static(browserDistFolder, {
+    maxAge: '1y',
+  }));
+
+  // Nodemailer route to send an email
+  server.post('/send-email', (req, res) => {
+    const { name, email, message } = req.body;
+
+    // Create a Nodemailer transporter
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: 'pankajpk7890@gmail.com',  // Your email address
+        pass: 'motherspride'    // Your email password or app password
+      }
+    });
+
+    // Mail options
+    const mailOptions = {
+      from: email,
+      to: 'pankajpkpk909@gmail.com',  // Recipient's email address
+      subject: `New message from ${name}`,
+      text: `You have a new message from ${name} (${email}):\n\n${message}`,
+    };
+
+    // Send the email
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        console.error(error);
+        return res.status(500).send('Error sending email');
+      }
+      res.status(200).send('Email sent successfully');
+    });
   });
 
-  // Define the email options
-  const mailOptions = {
-    from: '2118pankaj.kumar@gmail.com',
-    to: email,
-    subject: 'Subscription Confirmation',
-    text: 'Thank you for subscribing to our newsletter!',
-  };
+  // All regular routes use the Angular engine
+  server.get('*', (req, res, next) => {
+    const { protocol, originalUrl, baseUrl, headers } = req;
 
-  // Send the email
-  transporter.sendMail(mailOptions, (error, info) => {
-    if (error) {
-      console.error('Error sending email:', error);
-      res.status(500).send('Error sending email');
-    } else {
-      console.log('Email sent:', info.response);
-      res.status(200).send('Subscription successful');
-    }
+    commonEngine
+      .render({
+        bootstrap: AppServerModule,
+        documentFilePath: indexHtml,
+        url: `${protocol}://${headers.host}${originalUrl}`,
+        publicPath: browserDistFolder,
+        providers: [{ provide: APP_BASE_HREF, useValue: baseUrl }],
+      })
+      .then((html) => res.send(html))
+      .catch((err) => next(err));
   });
-});
 
-// Start the server
-app.listen(3000, () => {
-  console.log('Server running on http://localhost:3000');
-});
+  return server;
+}
+
+function run() {
+  const port = process.env['PORT'] || 4000;
+
+  // Start up the Node server
+  const server = app();
+  server.listen(port, () => {
+    console.log(`Node Express server listening on http://localhost:${port}`);
+  });
+}
+
+run();

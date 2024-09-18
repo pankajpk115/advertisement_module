@@ -1,6 +1,7 @@
 import { APP_BASE_HREF } from '@angular/common';
 import { CommonEngine } from '@angular/ssr';
-import express from 'express';
+import express, { Request, Response } from 'express';
+import nodemailer from 'nodemailer';
 import { fileURLToPath } from 'node:url';
 import { dirname, join, resolve } from 'node:path';
 import AppServerModule from './src/main.server';
@@ -14,15 +15,48 @@ export function app(): express.Express {
 
   const commonEngine = new CommonEngine();
 
+  // Middleware for JSON and URL-encoded form parsing
+  server.use(express.json());
+  server.use(express.urlencoded({ extended: true }));
+
   server.set('view engine', 'html');
   server.set('views', browserDistFolder);
 
-  // Example Express Rest API endpoints
-  // server.get('/api/**', (req, res) => { });
   // Serve static files from /browser
   server.get('*.*', express.static(browserDistFolder, {
-    maxAge: '1y'
+    maxAge: '1y',
   }));
+
+  // Nodemailer route to send an email
+  server.post('/send-email', (req: Request, res: Response) => {
+    const { name, email, message } = req.body;
+
+    // Create a Nodemailer transporter
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: 'pankajpk7890@gmail.com',  // Your email address
+        pass: 'motherspride'    // Your email password or app password
+      }
+    });
+
+    // Mail options
+    const mailOptions = {
+      from: email,
+      to: 'pankajpkpk909@gmail.com',  // Recipient's email address
+      subject: `New message from ${name}`,
+      text: `You have a new message from ${name} (${email}):\n\n${message}`,
+    };
+
+    // Send the email
+    // transporter.sendMail(mailOptions, (error, info) => {
+    //   if (error) {
+    //     console.error(error);
+    //     return res.status(500).send('Error sending email');
+    //   }
+    //   res.status(200).send('Email sent successfully');
+    // });
+  });
 
   // All regular routes use the Angular engine
   server.get('*', (req, res, next) => {
