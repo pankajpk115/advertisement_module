@@ -15,8 +15,8 @@
     background-image: url("../../assets/bg6.jpg");
     background-repeat:no-repeat;
     background-size: cover;
-    height: 100vh;
-    
+    height: 90vh;
+    /* margin: 0 auto; */
 }
 
 header {
@@ -97,3 +97,18 @@ main {
     bottom: 0;
     width: 100%;
 } */
+
+hr{
+    width: 50%;
+}
+@media (max-width: 768px) {
+    h6{
+        font-size: 14px;
+    }
+    li{
+        font-size: 12px;
+    }
+    .about{
+        height: 100%;
+    }
+}

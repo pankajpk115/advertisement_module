@@ -1,47 +1,37 @@
 <div class="contact">
-  <div>
+  <div class="contact-us">
     <h1>Contact Us</h1>
-<form action='/send-email' method="POST">
-  <label for="name">Name:</label>
-  <input type="text" id="name" name="name" required>
+    <form (submit)="register($event)">
+      <label for="name">Name:</label>
+      <input type="text" id="name" [(ngModel)]="name" name="name" placeholder="John Doe" autofocus required>
 
-  <label for="email">Email:</label>
-  <input type="email" id="email" name="email" required>
+      <label for="email">Email:</label>
+      <input type="email" id="email" [(ngModel)]="email" name="email" placeholder="xyz@gmail.com" required>
 
-  <label for="message">Message:</label>
-  <textarea id="message" name="message" required></textarea>
+      <label for="message">Message:</label>
+      <textarea id="message" [(ngModel)]="message" name="message" placeholder="Hello!" required></textarea>
 
-  <button type="submit">Send</button>
-</form>
-  </div>
-<div>
-  <h1>
-    <font color="#FF2626">C</font>
-    <font color="#252A34">o</font>
-    <font color="#753422">n</font>
-    <font color="#FFD523">n</font>
-    <font color="#71EFA3">e</font>
-    <font color="#0F52BA">c</font>
-    <font color="#66CC66">t</font>
-    <font color="#FF9966">  W</font>
-    <font color="##252A34">i</font>
-    <font color="#753422">t</font>
-    <font color="#FF2626">h</font>
-    <font color="#FFCCCC">  U</font>
-    <font color="#EFE3D0">s</font>
-</h1>
-  <div class="contact-content">
-    <h4>Name:Mrs. Anu Turan/ Dr. Sanjeev Kumar</h4>
-    <h4>Contact:9888251254/9888751254</h4>
-    <h4>Email: ror.sanjeev&#64;gmail.com</h4>
-    <h4>Address: </h4>
-  </div>
-
-</div>
-</div>
-<!-- <footer>
-  <div class="container">
-      <p>&copy; 2024 [Your Company Name]. All rights reserved.</p>
+      <div class="submit">
+        <button type="submit">Send</button>
+      </div>
       
+    </form>
   </div>
-</footer> -->
+
+  <div class="connect">
+    <h1>Connect With us</h1>
+    <div class="contact-content">
+      <h4> <u>Name</u> : Mrs. Anu Turan/ Dr. Sanjeev Kumar</h4>
+      <h4><u>Contact</u> : 9888251254/9888751254</h4>
+      <h4><u>Email</u> : ror.sanjeev&#64;gmail.com</h4>
+      <!-- <h4>Address: </h4>  -->
+
+      <h4 class="social-heading"><u>Redirect To</u>:</h4>
+      <div class="social">
+        
+        <a href="/"><img src="../../assets/wpLogo.jpeg" alt=""></a>
+        <a href="/"><img src="../../assets/gmail.png" alt=""></a>
+      </div>
+    </div>
+  </div>
+</div>
